@@ -1,0 +1,60 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  height: 100%;
+}
+
+.dataTable-container {
+  width: 90%;
+  margin: 0 auto;
+  /* overflow-x: auto; */
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  margin: 20px 0;
+  font-size: 1em;
+  font-family: "Arial", sans-serif;
+  border: 1px solid gray;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.table tr {
+  width: 100%;
+}
+
+.table thead {
+  background-color: #50577a; /* Light background for header */
+  position: sticky; /* Sticky header */
+  width: 100%;
+  margin: 0;
+  top: 0; /* Sticks to the top */
+  z-index: 10; /* Ensures it stays above other content */
+}
+
+.table th {
+  padding: 12px 15px; /* Padding for cells */
+  text-align: center; /* Align text to the left */
+}
+
+.table td {
+  padding: 12px 15px; /* Padding for cells */
+  text-align: left; /* Align text to the left */
+}
+
+.header-group th {
+  border: 2px solid white;
+}
