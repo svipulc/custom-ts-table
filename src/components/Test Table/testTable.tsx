@@ -1,7 +1,7 @@
 import { createColumnHelper } from "../../core/columns/columns";
 import { useCreateCustomTable } from "../../core/table/table";
 
-export const employees: employees[] = [
+const employees: employees[] = [
   {
     id: 1,
     name: "John Doe",
@@ -123,7 +123,7 @@ export const employees: employees[] = [
     },
   },
 ];
-export type employees = {
+type employees = {
   id: number;
   name: string;
   position: string;

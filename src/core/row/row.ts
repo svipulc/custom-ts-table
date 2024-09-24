@@ -54,8 +54,13 @@ export const filterData = <T>(data: T[], filterCriteria: FilterCriteria<T>) => {
     return Object.entries(filterCriteria).every(([key, value]) => {
       const itemValue = GetRowValue(key as DeepKeys<T>, item);
 
+      // if (typeof value === "function") {
+      //   return (value as FilterFunction)(itemValue);
+      // }
       if (typeof value === "function") {
-        return (value as FilterFunction)(itemValue);
+        return (value as FilterFunction)(
+          typeof itemValue === "string" ? itemValue.toLowerCase() : itemValue
+        );
       }
 
       const stringValue = String(value).toLowerCase();

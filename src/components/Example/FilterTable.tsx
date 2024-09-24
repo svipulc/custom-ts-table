@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { createColumnHelper } from "../../core/columns/columns";
+import { useCreateCustomTable } from "../../core/table/table";
 import { employees } from "../../data";
 import { DeepKeys } from "../../types/tableTypes";
-import { useCreateCustomTable } from "../../core/table/table";
 
 // create column helper
 const columnHelper = createColumnHelper<employees>();
@@ -15,11 +15,12 @@ const columns = [
   }),
   columnHelper.accessor("name", {
     id: "2",
-    header: "Name",
+    header: () => <a href="">Name</a>,
   }),
   columnHelper.accessor("salary", {
     id: "3",
     header: "Salary",
+    sortable: true,
   }),
   columnHelper.accessor("department", {
     id: "4",
@@ -29,58 +30,16 @@ const columns = [
     id: "5",
     header: "Position",
   }),
-  columnHelper.group({
-    id: "6",
-    header: "Address",
-    columns: [
-      columnHelper.accessor("address.city", {
-        id: "7",
-        header: "City",
-      }),
-      columnHelper.accessor("address.country", {
-        id: "8",
-        header: "Country",
-      }),
-      columnHelper.accessor("address.zipcode", {
-        id: "9",
-        header: () => (
-          <span
-            style={{
-              backgroundColor: "lightblue",
-              color: "black",
-              height: "100%",
-              padding: "5px",
-            }}
-          >
-            ZipCode
-            <span
-              className="lato-regular"
-              style={{
-                color: "black",
-                marginLeft: "5px",
-                background: "#f0f0f0",
-                padding: "2px",
-                borderRadius: "10px",
-              }}
-            >
-              click me
-            </span>
-          </span>
-        ),
-        sortable: true,
-      }),
-    ],
-  }),
 ];
 
-const SortHeaderTable = () => {
+const FilterTable = () => {
   const [sortConfig, setSortConfig] = useState<{
     key: DeepKeys<employees>;
     direction: "ascending" | "descending" | "none";
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
-
+  const [filters, setFilters] = useState("");
   // update state of sort base on user action
   const requestSort = (key: DeepKeys<employees>) => {
     let direction: "ascending" | "descending" | "none" = "ascending";
@@ -101,26 +60,14 @@ const SortHeaderTable = () => {
     setSortConfig({ key, direction });
   };
 
-  /*  update state of filter base on user action
-  //   const filteredData = useMemo(() => {
-  //     return employees.filter((user) => {
-  //       const searchValue = filterValue.toLowerCase();
-  //       return Object.entries(user).some(([key, value]) => {
-  //         if (typeof value === "object" && value !== null) {
-  //           return Object.values(value).some((nestedValue) =>
-  //             String(nestedValue).toLowerCase().includes(searchValue)
-  //           );
-  //         }
-  //         return String(value).toLowerCase().includes(searchValue);
-  //       });
-  //     });
-  //   }, [employees, filterValue]);
-  */
   // create table
   const table = useCreateCustomTable({
     data: employees,
     columns: columns,
     sorting: sortConfig,
+    filterCriteria: {
+      name: (value) => value.includes(filters.toLocaleLowerCase()),
+    },
     pagination: {
       page: currentPage,
       pageSize: pageSize,
@@ -133,11 +80,26 @@ const SortHeaderTable = () => {
   // get footer group
   const footerGroups = table.getFooterGroup();
 
-  //   const totalPages = Math.ceil(filteredData.length / pageSize); // total number of pages
   const totalPages = table.getPaginationInfo()?.totalPages!;
-
   return (
     <div className="table-container">
+      <div>
+        <label htmlFor="" style={{ marginRight: "20px", fontSize: "20px" }}>
+          Filter Name
+        </label>
+        <input
+          type="text"
+          name="search"
+          id="search"
+          style={{
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid lightblue",
+            fontSize: "16px",
+          }}
+          onChange={(e) => setFilters(e.target.value)}
+        />
+      </div>
       <table className="table">
         <thead className="table-header">
           {headerGroups.map((headerGroup) => (
@@ -175,10 +137,10 @@ const SortHeaderTable = () => {
           ))}
         </thead>
         <tbody className="table-body">
-          {rowModel.rows.map((row, rowIndex) => (
-            <tr key={rowIndex} className="table-row">
-              {row.getVisibleCells().map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell.getValue()}</td>
+          {rowModel.rows.map((row) => (
+            <tr key={row.id} className="table-row">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>{cell.getValue()}</td>
               ))}
             </tr>
           ))}
@@ -187,23 +149,12 @@ const SortHeaderTable = () => {
           {footerGroups.map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <>
-                  {header.colSpan <= 1 && (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      rowSpan={header.rowSpan}
-                    >
-                      {header.footer}
-                    </th>
-                  )}
-                </>
+                <th key={header.id}>{header.footer}</th>
               ))}
             </tr>
           ))}
         </tfoot>
       </table>
-
       <div
         style={{
           display: "flex",
@@ -301,4 +252,4 @@ const SortHeaderTable = () => {
   );
 };
 
-export default SortHeaderTable;
+export default FilterTable;
