@@ -1,6 +1,7 @@
-import { createColumnHelper, useCreateCustomTable } from "../../core/columns";
+import { createColumnHelper } from "../../core/columns/columns";
+import { useCreateCustomTable } from "../../core/table/table";
 
-const employees: employees[] = [
+export const employees: employees[] = [
   {
     id: 1,
     name: "John Doe",
@@ -61,8 +62,68 @@ const employees: employees[] = [
       zipcode: "zipcode1",
     },
   },
+  {
+    id: 6,
+    name: "John Doe",
+    position: "Software Engineer",
+    department: "IT",
+    salary: 80000,
+    address: {
+      city: "city1",
+      country: "countery1",
+      zipcode: "zipcode1",
+    },
+  },
+  {
+    id: 7,
+    name: "Jane Smith",
+    position: "Project Manager",
+    department: "Operations",
+    salary: 95000,
+    address: {
+      city: "city2",
+      country: "countery2",
+      zipcode: "zipcode1",
+    },
+  },
+  {
+    id: 8,
+    name: "Emily Davis",
+    position: "Data Analyst",
+    department: "Marketing",
+    salary: 70000,
+    address: {
+      city: "city3",
+      country: "countery3",
+      zipcode: "zipcode1",
+    },
+  },
+  {
+    id: 9,
+    name: "Michael Brown",
+    position: "UX Designer",
+    department: "Design",
+    salary: 85000,
+    address: {
+      city: "city4",
+      country: "countery4",
+      zipcode: "zipcode1",
+    },
+  },
+  {
+    id: 10,
+    name: "Sarah Wilson",
+    position: "HR Specialist",
+    department: "Human Resources",
+    salary: 60000,
+    address: {
+      city: "city5",
+      country: "countery5",
+      zipcode: "zipcode1",
+    },
+  },
 ];
-type employees = {
+export type employees = {
   id: number;
   name: string;
   position: string;
@@ -173,7 +234,7 @@ export default function TestTable() {
           {table.getRowModel().rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.getVisibleCells().map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell.getContext().getValue()}</td>
+                <td key={cellIndex}>{cell.getValue()}</td>
               ))}
             </tr>
           ))}

@@ -1,7 +1,70 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+.lato-thin {
+  font-family: "Lato", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.lato-light {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.lato-regular {
+  font-family: "Lato", sans-serif;
   font-weight: 400;
+  font-style: normal;
+}
+
+.lato-bold {
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.lato-black {
+  font-family: "Lato", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.lato-thin-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.lato-light-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.lato-regular-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.lato-bold-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.lato-black-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+:root {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  /* line-height: 1.5; */
 
   color-scheme: light dark;
 
@@ -11,6 +74,11 @@
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
   height: 100%;
+  background: linear-gradient(
+    109.6deg,
+    rgb(0, 0, 0) 11.2%,
+    rgb(11, 132, 145) 91.1%
+  );
 }
 
 .dataTable-container {
@@ -22,39 +90,42 @@
   margin-bottom: 20px;
 }
 
-.table {
+table {
   width: 100%;
-  margin: 20px 0;
-  font-size: 1em;
-  font-family: "Arial", sans-serif;
-  border: 1px solid gray;
-  border-radius: 8px;
-  overflow: auto;
+  margin: 20px 0 20px 0;
+  border-collapse: collapse;
+  /* background: linear-gradient(
+    109.6deg,
+    rgb(0, 0, 0) 11.2%,
+    rgb(11, 132, 145) 91.1%
+  ); */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* From https://css.glass */
 }
 
-.table tr {
-  width: 100%;
+th,
+td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+td {
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.table thead {
-  background-color: #50577a; /* Light background for header */
-  position: sticky; /* Sticky header */
-  width: 100%;
-  margin: 0;
-  top: 0; /* Sticks to the top */
-  z-index: 10; /* Ensures it stays above other content */
+th {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.table th {
-  padding: 12px 15px; /* Padding for cells */
-  text-align: center; /* Align text to the left */
+th:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease;
 }
 
-.table td {
-  padding: 12px 15px; /* Padding for cells */
-  text-align: left; /* Align text to the left */
-}
-
-.header-group th {
-  border: 2px solid white;
+.table-row:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease;
 }

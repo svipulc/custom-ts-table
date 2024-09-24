@@ -5,7 +5,7 @@
 // import TableRow from "../Table/TableRow";
 
 import { ReactNode } from "react";
-import { accessorFn } from "../../core/columns";
+import { accessorFn } from "../../core/columns/columns";
 
 interface DataTableProps<T> extends React.ComponentProps<"div"> {
   data?: T[];
