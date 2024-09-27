@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createColumnHelper } from "../../core/columns/columns";
 import { employees } from "../../data";
 import { DeepKeys } from "../../types/tableTypes";
@@ -101,21 +101,6 @@ const SortHeaderTable = () => {
     setSortConfig({ key, direction });
   };
 
-  /*  update state of filter base on user action
-  //   const filteredData = useMemo(() => {
-  //     return employees.filter((user) => {
-  //       const searchValue = filterValue.toLowerCase();
-  //       return Object.entries(user).some(([key, value]) => {
-  //         if (typeof value === "object" && value !== null) {
-  //           return Object.values(value).some((nestedValue) =>
-  //             String(nestedValue).toLowerCase().includes(searchValue)
-  //           );
-  //         }
-  //         return String(value).toLowerCase().includes(searchValue);
-  //       });
-  //     });
-  //   }, [employees, filterValue]);
-  */
   // create table
   const table = useCreateCustomTable({
     data: employees,
@@ -135,6 +120,11 @@ const SortHeaderTable = () => {
 
   //   const totalPages = Math.ceil(filteredData.length / pageSize); // total number of pages
   const totalPages = table.getPaginationInfo()?.totalPages!;
+  const currentPage1 = table.getPaginationInfo()?.currentPage!;
+
+  useEffect(() => {
+    setCurrentPage(currentPage1);
+  }, [currentPage1]);
 
   return (
     <div className="table-container">
@@ -234,7 +224,7 @@ const SortHeaderTable = () => {
             Previous
           </button>
           <span>
-            {currentPage} of {totalPages}
+            {currentPage1} of {totalPages}
           </span>
           <button
             className="lato-bold"

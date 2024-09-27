@@ -23,7 +23,7 @@ export function GetRowValue<T>(path: DeepKeys<T>, rowObj: T) {
   return value as ReactNode;
 }
 
-// create row model function
+// Create row model function
 export function createRowModel<T>(
   processedData: T[],
   flatColumns: ColumnDef<T>[]
@@ -33,52 +33,29 @@ export function createRowModel<T>(
       (rowData, index1): Row<T> => ({
         id: `${index1}`,
         getVisibleCells: (): Cell<T>[] =>
-          flatColumns.map(
-            (column, index2): Cell<T> => ({
+          flatColumns.map((column, index2): Cell<T> => {
+            const getValue = () =>
+              GetRowValue(column.accessorKey as DeepKeys<T>, rowData);
+            return {
               id: `${index1}_${index2}`,
               column: {
                 columnDef: column,
               },
-              getValue: () =>
-                GetRowValue(column.accessorKey as DeepKeys<T>, rowData),
-            })
-          ),
+              getValue,
+              render: () => {
+                if (column.cell) {
+                  return column.cell({ getValue, row: rowData });
+                }
+                return getValue() as ReactNode;
+              },
+            };
+          }),
       })
     ),
   };
 }
 
-// function to filter data based on filter criteria
-export const filterData = <T>(data: T[], filterCriteria: FilterCriteria<T>) => {
-  return data.filter((item) => {
-    return Object.entries(filterCriteria).every(([key, value]) => {
-      const itemValue = GetRowValue(key as DeepKeys<T>, item);
-
-      // if (typeof value === "function") {
-      //   return (value as FilterFunction)(itemValue);
-      // }
-      if (typeof value === "function") {
-        return (value as FilterFunction)(
-          typeof itemValue === "string" ? itemValue.toLowerCase() : itemValue
-        );
-      }
-
-      const stringValue = String(value).toLowerCase();
-
-      if (typeof itemValue === "object" && itemValue !== null) {
-        // Handle nested objects
-        return Object.values(itemValue).some((nestedValue) =>
-          String(nestedValue).toLowerCase().includes(stringValue)
-        );
-      }
-
-      // Handle primitive values
-      return String(itemValue).toLowerCase().includes(stringValue);
-    });
-  });
-};
-
-//
+// sort data function
 export const sortData = <T>(
   data: T[],
   key: DeepKeys<T>,
@@ -108,3 +85,96 @@ export const sortData = <T>(
     return 0;
   });
 };
+
+// Apply global filters function
+function applyGlobalFilter<T>(
+  data: T[],
+  globalFilter: string,
+  columns: ColumnDef<T>[]
+): T[] {
+  const lowercasedFilter = globalFilter.toLowerCase().trim();
+
+  function checkValue(value: unknown): boolean {
+    if (value == null) return false;
+
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
+    ) {
+      return String(value).toLowerCase().includes(lowercasedFilter);
+    }
+
+    if (typeof value === "object") {
+      return Object.values(value).some(checkValue);
+    }
+
+    return false;
+  }
+
+  function checkColumn(column: ColumnDef<T>, item: T): boolean {
+    if (column.isGroupHeader && column.columns) {
+      return column.columns.some((subColumn) => checkColumn(subColumn, item));
+    }
+
+    if (column.accessorKey) {
+      const value = GetRowValue(column.accessorKey as DeepKeys<T>, item);
+      return checkValue(value);
+    }
+
+    return false;
+  }
+
+  return data.filter((item) =>
+    columns.some((column) => checkColumn(column, item))
+  );
+}
+
+// column filter data function
+function applyColumnFilters<T>(
+  data: T[],
+  columnFilters: FilterCriteria<T>
+): T[] {
+  return data.filter((item) => {
+    return Object.entries(columnFilters).every(([key, value]) => {
+      const itemValue = GetRowValue(key as DeepKeys<T>, item);
+
+      if (typeof value === "function") {
+        return (value as FilterFunction)(
+          typeof itemValue === "string" ? itemValue.toLowerCase() : itemValue
+        );
+      }
+
+      const stringValue = String(value).toLowerCase();
+
+      if (typeof itemValue === "object" && itemValue !== null) {
+        // Handle nested objects
+        return Object.values(itemValue).some((nestedValue) =>
+          String(nestedValue).toLowerCase().includes(stringValue)
+        );
+      }
+
+      // Handle primitive values
+      return String(itemValue).toLowerCase().includes(stringValue);
+    });
+  });
+}
+
+// apply filters function
+export function applyFilters<T>(
+  data: T[],
+  globalFilter: string | undefined,
+  columnFilters: FilterCriteria<T> | undefined,
+  columns: ColumnDef<T>[]
+): T[] {
+  let result = data;
+  if (globalFilter) {
+    result = applyGlobalFilter(result, globalFilter, columns);
+  }
+
+  if (columnFilters) {
+    result = applyColumnFilters(result, columnFilters);
+  }
+  console;
+  return result;
+}

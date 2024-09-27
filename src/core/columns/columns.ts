@@ -14,8 +14,21 @@ export function createColumnHelper<T>(): createColumnHelper<T> {
     accessor: (accessor, columns): accessorFn<T> => {
       return {
         id: columns.id,
-        cell: (row) =>
-          columns.cell ? columns.cell(row) : GetRowValue(accessor, row),
+        // cell: (row) =>
+        //   columns.cell ? columns.cell(row) : GetRowValue(accessor, row),
+        cell: (info) => {
+          if (columns.cell) {
+            // Custom cell rendering
+            return columns.cell({
+              getValue: () => GetRowValue(accessor, info.row),
+              row: info.row,
+              column: columns as ColumnDef<T>,
+            });
+          } else {
+            // Default cell rendering
+            return GetRowValue(accessor, info.row);
+          }
+        },
         header: columns.header,
         accessorKey: accessor,
         footer: columns.footer,

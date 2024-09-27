@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createColumnHelper } from "../../core/columns/columns";
 import { useCreateCustomTable } from "../../core/table/table";
 import { employees } from "../../data";
@@ -29,6 +29,12 @@ const columns = [
   columnHelper.accessor("position", {
     id: "5",
     header: "Position",
+    cell(info) {
+      if (info.getValue()) {
+        console.log(typeof info.getValue());
+      }
+      return <div>{info.getValue()}</div>;
+    },
   }),
 ];
 
@@ -65,7 +71,7 @@ const FilterTable = () => {
     data: employees,
     columns: columns,
     sorting: sortConfig,
-    filterCriteria: {
+    columnFilter: {
       name: (value) => value.includes(filters.toLocaleLowerCase()),
     },
     pagination: {
@@ -81,13 +87,19 @@ const FilterTable = () => {
   const footerGroups = table.getFooterGroup();
 
   const totalPages = table.getPaginationInfo()?.totalPages!;
+  const currentPage1 = table.getPaginationInfo()?.currentPage!;
+
+  useEffect(() => {
+    setCurrentPage(currentPage1);
+  }, [currentPage1]);
   return (
-    <div className="table-container">
+    <div className="table-container" style={{ marginBottom: "100px" }}>
       <div>
         <label htmlFor="" style={{ marginRight: "20px", fontSize: "20px" }}>
           Filter Name
         </label>
         <input
+          placeholder="Search name columns..."
           type="text"
           name="search"
           id="search"
@@ -140,7 +152,7 @@ const FilterTable = () => {
           {rowModel.rows.map((row) => (
             <tr key={row.id} className="table-row">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{cell.getValue()}</td>
+                <td key={cell.id}>{cell.render()}</td>
               ))}
             </tr>
           ))}

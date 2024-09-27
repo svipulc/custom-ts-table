@@ -26,10 +26,17 @@ export interface GroupFn<T> extends accessorFn<T> {
   columns: Array<accessorFn<T>>;
 }
 
+interface CellRenderingInfo<T> {
+  getValue: () => ReactNode;
+  row: T;
+  column: ColumnDef<T>;
+}
+
 // accessor function type
 export type accessorFn<T> = {
   id: string | (() => string);
-  cell?: (row: T) => ReactNode /** @row -> data need to change name*/;
+  // cell?: (row: T) => ReactNode /** @row -> data need to change name*/;
+  cell?: (info: CellRenderingInfo<T>) => ReactNode;
   accessorKey?: DeepKeys<T>;
   header?:
     | ((header?: HandleAutoComplete<DeepKeys<T>>) => ReactNode)
@@ -51,10 +58,11 @@ export type createColumnHelper<T> = {
 export type ColumnDef<T> = {
   id: string;
   header: string | (() => ReactNode);
-  accessorKey?: keyof T;
+  accessorKey?: DeepKeys<T>;
   columns?: ColumnDef<T>[];
   footer?: () => ReactNode;
-  cell?: (row: T) => ReactNode;
+  cell?: (info: { getValue: () => any; row: T }) => React.ReactNode;
+  // cell?: (row?: T) => ReactNode;
   sortable?: boolean;
   isGroupHeader?: boolean;
 };
@@ -96,6 +104,7 @@ export type Cell<T> = {
     columnDef: ColumnDef<T>;
   };
   getValue: () => ReactNode;
+  render: () => React.ReactNode;
 };
 
 // table row type
@@ -127,7 +136,9 @@ export type TableOptions<T> = {
     key: DeepKeys<T>;
     direction: "ascending" | "descending" | "none";
   } | null;
-  filterCriteria?: FilterCriteria<T>;
+  // filterCriteria?: FilterCriteria<T>;
+  globalFilter?: string;
+  columnFilter?: FilterCriteria<T> | undefined;
   pagination?: {
     page: number;
     pageSize: number;

@@ -59,7 +59,7 @@ const columns = [
   }),
 ];
 
-const TestTable: React.FC = () => {
+const GlobalFilterTable: React.FC = () => {
   const [sorting, setSorting] = useState<{
     key: DeepKeys<employees>;
     direction: "ascending" | "descending" | "none";
@@ -84,6 +84,14 @@ const TestTable: React.FC = () => {
     columns: columns,
     sorting: sorting,
     globalFilter: globalFilter,
+    // columnFilter: {
+    //   department: (value) => {
+    //     return value === "it";
+    //   },
+    //   salary: (value) => {
+    //     return value > 70000;
+    //   },
+    // },
     columnFilter: filters,
     pagination: {
       page: currentPage,
@@ -303,4 +311,4 @@ const TestTable: React.FC = () => {
   );
 };
 
-export default TestTable;
+export default GlobalFilterTable;
