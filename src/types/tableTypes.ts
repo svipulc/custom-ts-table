@@ -27,7 +27,7 @@ export interface GroupFn<T> extends accessorFn<T> {
 }
 
 interface CellRenderingInfo<T> {
-  getValue: () => ReactNode;
+  // getValue: () => string | number | boolean | null | undefined;
   row: T;
   column: ColumnDef<T>;
 }
@@ -61,7 +61,10 @@ export type ColumnDef<T> = {
   accessorKey?: DeepKeys<T>;
   columns?: ColumnDef<T>[];
   footer?: () => ReactNode;
-  cell?: (info: { getValue: () => any; row: T }) => React.ReactNode;
+  cell?: (info: {
+    getValue: () => string | number | boolean | null | undefined;
+    row: T;
+  }) => React.ReactNode;
   // cell?: (row?: T) => ReactNode;
   sortable?: boolean;
   isGroupHeader?: boolean;
@@ -103,7 +106,7 @@ export type Cell<T> = {
   column: {
     columnDef: ColumnDef<T>;
   };
-  getValue: () => ReactNode;
+  getValue: () => string | number | boolean | null | undefined;
   render: () => React.ReactNode;
 };
 

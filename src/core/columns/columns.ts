@@ -20,7 +20,7 @@ export function createColumnHelper<T>(): createColumnHelper<T> {
           if (columns.cell) {
             // Custom cell rendering
             return columns.cell({
-              getValue: () => GetRowValue(accessor, info.row),
+              // getValue: () => GetRowValue(accessor, info.row),
               row: info.row,
               column: columns as ColumnDef<T>,
             });

@@ -1,88 +1,117 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createColumnHelper } from "../../core/columns/columns";
-import { employees } from "../../data";
-import { DeepKeys } from "../../types/tableTypes";
 import { useCreateCustomTable } from "../../core/table/table";
+import { DeepKeys } from "../../types/tableTypes";
 
-// create column helper
-const columnHelper = createColumnHelper<employees>();
+interface Data {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  tags: string[];
+  brand: string;
+  sku: string;
+  weight: number;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  warrantyInformation: string;
+  shippingInformation: string;
+  availabilityStatus: string;
+}
 
-// create columns
+const columnHelper = createColumnHelper<Data>();
 const columns = [
   columnHelper.accessor("id", {
     id: "1",
     header: "ID",
+    footer: () => "ID",
   }),
-  columnHelper.accessor("name", {
+  columnHelper.accessor("title", {
     id: "2",
-    header: "Name",
+    header: () => <a href="">Title</a>,
+    footer: () => "Title",
   }),
-  columnHelper.accessor("salary", {
+  columnHelper.accessor("description", {
     id: "3",
-    header: "Salary",
+    header: "Description",
+    footer: () => "Description",
   }),
-  columnHelper.accessor("department", {
+  columnHelper.accessor("category", {
     id: "4",
-    header: "Department",
+    header: "Category",
+    footer: () => "Category",
   }),
-  columnHelper.accessor("position", {
+  columnHelper.accessor("price", {
     id: "5",
-    header: "Position",
+    header: "Price",
+    footer: () => "Price",
+    sortable: true,
+  }),
+  columnHelper.accessor("discountPercentage", {
+    id: "6",
+    header: "Discount Percentage",
+    footer: () => "Discount Percentage",
   }),
   columnHelper.group({
-    id: "6",
-    header: "Address",
+    id: "7",
+    header: "Rating",
     columns: [
-      columnHelper.accessor("address.city", {
-        id: "7",
-        header: "City",
-      }),
-      columnHelper.accessor("address.country", {
+      columnHelper.accessor("rating", {
         id: "8",
-        header: "Country",
+        header: "Rating",
+        footer: () => "Rating",
       }),
-      columnHelper.accessor("address.zipcode", {
+      columnHelper.accessor("stock", {
         id: "9",
-        header: () => (
-          <span
-            style={{
-              backgroundColor: "lightblue",
-              color: "black",
-              height: "100%",
-              padding: "5px",
-            }}
-          >
-            ZipCode
-            <span
-              className="lato-regular"
-              style={{
-                color: "black",
-                marginLeft: "5px",
-                background: "#f0f0f0",
-                padding: "2px",
-                borderRadius: "10px",
-              }}
-            >
-              click me
-            </span>
-          </span>
-        ),
-        sortable: true,
+        header: "Stock",
+        footer: () => "Stock",
+        cell: (info) => {
+          if (info.row.stock <= 10)
+            return <span style={{ color: "red" }}>{info.row.stock}</span>;
+          return info.row.stock;
+        },
+      }),
+    ],
+  }),
+  columnHelper.group({
+    id: "10",
+    header: "Dimentsion",
+    columns: [
+      columnHelper.accessor("dimensions.width", {
+        id: "11",
+        header: "Width",
+      }),
+      columnHelper.accessor("dimensions.height", {
+        id: "12",
+        header: "Height",
+      }),
+      columnHelper.accessor("dimensions.depth", {
+        id: "13",
+        header: "Depth",
       }),
     ],
   }),
 ];
 
-const SortHeaderTable = () => {
+const DynamicTable = () => {
+  const [data, setData] = useState<Data[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [globalFilter, setGlobalFilter] = useState("");
+  //   const [filters, setFilters] = useState<Filters>({});
+  const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState<{
-    key: DeepKeys<employees>;
+    key: DeepKeys<Data>;
     direction: "ascending" | "descending" | "none";
   } | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
-  // update state of sort base on user action
-  const requestSort = (key: DeepKeys<employees>) => {
+  const requestSort = (key: DeepKeys<Data>) => {
     let direction: "ascending" | "descending" | "none" = "ascending";
     if (
       sortConfig &&
@@ -101,16 +130,23 @@ const SortHeaderTable = () => {
     setSortConfig({ key, direction });
   };
 
-  // create table
+  useEffect(() => {
+    fetch(`https://dummyjson.com/products?limit=0&skip`)
+      .then((response) => response.json())
+      .then((data) => setData(data.products));
+  }, []);
+
   const table = useCreateCustomTable({
-    data: employees,
-    columns: columns,
+    data,
+    columns,
     sorting: sortConfig,
+    globalFilter,
     pagination: {
       page: currentPage,
       pageSize: pageSize,
     },
   });
+
   // get header group
   const headerGroups = table.getHeaderGroup();
   // get row model
@@ -118,16 +154,14 @@ const SortHeaderTable = () => {
   // get footer group
   const footerGroups = table.getFooterGroup();
 
-  //   const totalPages = Math.ceil(filteredData.length / pageSize); // total number of pages
   const totalPages = table.getPaginationInfo()?.totalPages!;
   const currentPage1 = table.getPaginationInfo()?.currentPage!;
 
-  useEffect(() => {
-    setCurrentPage(currentPage1);
-  }, [currentPage1]);
-
   return (
-    <div className="table-container">
+    <div>
+      <div>
+        <input type="text" onChange={(e) => setGlobalFilter(e.target.value)} />
+      </div>
       <table className="table">
         <thead className="table-header">
           {headerGroups.map((headerGroup) => (
@@ -139,9 +173,7 @@ const SortHeaderTable = () => {
                   key={column.id}
                   onClick={() =>
                     column.column.sortable &&
-                    requestSort(
-                      column.column.accessorKey as DeepKeys<employees>
-                    )
+                    requestSort(column.column.accessorKey as DeepKeys<Data>)
                   }
                   style={{
                     cursor:
@@ -165,35 +197,31 @@ const SortHeaderTable = () => {
           ))}
         </thead>
         <tbody className="table-body">
-          {rowModel.rows.map((row, rowIndex) => (
-            <tr key={rowIndex} className="table-row">
-              {row.getVisibleCells().map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell.render()}</td>
+          {rowModel.rows.map((row) => (
+            <tr key={row.id} className="table-row">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>{cell.render()}</td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot className="table-footer">
-          {footerGroups.map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <>
-                  {header.colSpan <= 1 && (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      rowSpan={header.rowSpan}
-                    >
-                      {header.footer}
-                    </th>
-                  )}
-                </>
+          {footerGroups.map((footerGroup) => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map((footer) => (
+                <td
+                  key={footer.id}
+                  colSpan={footer.colSpan}
+                  rowSpan={footer.rowSpan}
+                >
+                  {footer.isGroupHeader ? footer.header : null}
+                  {footer.footer}
+                </td>
               ))}
             </tr>
           ))}
         </tfoot>
       </table>
-
       <div
         style={{
           display: "flex",
@@ -252,43 +280,9 @@ const SortHeaderTable = () => {
         <div style={{ marginTop: "10px" }}>
           Total entries: {table.getPaginationInfo()?.totalItems}
         </div>
-        <div
-          style={{
-            marginTop: "10px",
-            alignItems: "center",
-            display: "flex",
-            gap: "10px",
-          }}
-        >
-          <label htmlFor="">Show</label>
-          <select
-            name="show"
-            id="show"
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-            }}
-            style={{
-              backgroundColor: "lightblue",
-              padding: "5px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
-          >
-            <option value="4">4</option>
-            <option value="8">8</option>
-            <option value="10">10</option>
-          </select>
-        </div>
       </div>
     </div>
   );
 };
 
-export default SortHeaderTable;
+export default DynamicTable;

@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { accessorFn, DeepKeys } from "../../types/tableTypes";
 import { useCreateCustomTable } from "../../core/table/table";
 import TablePagination from "../Table/TablePagination";
 import TableHeader from "../Table/TableHeader";
+
+type Filters<T> = Partial<Record<DeepKeys<T>, string>>;
 
 interface DataTableProps<T> extends React.ComponentProps<"div"> {
   data: T[];
@@ -13,6 +15,7 @@ interface DataTableProps<T> extends React.ComponentProps<"div"> {
   pageIndex?: number;
   onPageChange?: boolean;
   globalFilter?: boolean;
+  columnsFilter?: Filters<T>;
 }
 
 function DataTable<T>({
@@ -25,6 +28,7 @@ function DataTable<T>({
   sorting,
   onPageChange,
   className,
+  columnsFilter,
   ...props
 }: DataTableProps<T>) {
   const [currentPage, setCurrentPage] = useState(pageIndex || 1);
@@ -34,7 +38,7 @@ function DataTable<T>({
     key: DeepKeys<T>;
     direction: "ascending" | "descending" | "none";
   } | null>(null);
-
+  const [filters, setFilters] = useState<Filters<T>>(columnsFilter || {});
   const requestSort = (key: DeepKeys<T>) => {
     let direction: "ascending" | "descending" | "none" = "ascending";
     if (
@@ -59,6 +63,7 @@ function DataTable<T>({
     columns: columns,
     sorting: sortConfig,
     globalFilter: updateGlobalFilter,
+    columnFilter: filters,
     pagination: {
       page: currentPage,
       pageSize: pageSizes || 4,
@@ -68,6 +73,14 @@ function DataTable<T>({
   const rowModel = table.getRowModel();
   const footerGroups = table.getFooterGroup();
   const paginationInfo = table.getPaginationInfo();
+
+  console.log(Object.keys(filters));
+
+  useEffect(() => {
+    if (updateGlobalFilter) {
+      setCurrentPage(pageIndex || 1);
+    }
+  }, [pageIndex, updateGlobalFilter]);
 
   return (
     <div className={`dataTable-container ${className}`} {...props}>
@@ -85,6 +98,33 @@ function DataTable<T>({
               marginBottom: "10px",
             }}
           />
+        </div>
+      )}
+
+      {columnsFilter && (
+        <div style={{ gap: "10px", display: "flex" }}>
+          {Object.keys(columnsFilter).map((key) => (
+            <div key={key} style={{ gap: "10px", display: "flex" }}>
+              <label htmlFor={key}>{key}:</label>
+              <input
+                type="text"
+                id={key}
+                value={filters[key as keyof typeof filters] || ""}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    [key]: e.target.value,
+                  })
+                }
+                style={{
+                  padding: "8px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  marginBottom: "10px",
+                }}
+              />
+            </div>
+          ))}
         </div>
       )}
 

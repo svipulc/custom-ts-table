@@ -7,6 +7,7 @@ import GlobalFilterTable from "./components/Example/GlobalFilterTable";
 import { createColumnHelper } from "./core/columns/columns";
 import { employees } from "./data";
 import TestTable from "./components/Test Table/testTable";
+import DynamicTable from "./components/Test Table/DynamicTable";
 
 function App() {
   return (
@@ -46,10 +47,19 @@ function App() {
         </div>
 
         <h3>Custom Table Component</h3>
-        <DataTable data={employees} columns={columns} globalFilter pagination />
+        <DataTable
+          data={employees}
+          columns={columns}
+          globalFilter
+          pagination
+          columnsFilter={{}}
+        />
 
         {/* <h3>Testing table</h3>
         <TestTable /> */}
+
+        <h3>Dynamic Table</h3>
+        <DynamicTable />
       </section>
     </div>
   );

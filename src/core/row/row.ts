@@ -20,7 +20,7 @@ export function GetRowValue<T>(path: DeepKeys<T>, rowObj: T) {
       return undefined;
     }
   }
-  return value as ReactNode;
+  return value as string | number | boolean | null | undefined;
 }
 
 // Create row model function
@@ -46,7 +46,7 @@ export function createRowModel<T>(
                 if (column.cell) {
                   return column.cell({ getValue, row: rowData });
                 }
-                return getValue() as ReactNode;
+                return getValue();
               },
             };
           }),

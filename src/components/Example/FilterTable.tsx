@@ -21,6 +21,16 @@ const columns = [
     id: "3",
     header: "Salary",
     sortable: true,
+    cell(info) {
+      if (info.row.salary > 70000) {
+        return (
+          <div style={{ backgroundColor: "lightgreen", color: "black" }}>
+            {info.row.salary} 💰
+          </div>
+        );
+      }
+      return <div>{info.row.salary}</div>;
+    },
   }),
   columnHelper.accessor("department", {
     id: "4",
@@ -30,10 +40,10 @@ const columns = [
     id: "5",
     header: "Position",
     cell(info) {
-      if (info.getValue()) {
-        console.log(typeof info.getValue());
+      if (info.row.position === "Software Engineer") {
+        return <div>{info.row.position} 🤓</div>;
       }
-      return <div>{info.getValue()}</div>;
+      return <div>{info.row.position}</div>;
     },
   }),
 ];

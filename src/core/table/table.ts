@@ -51,14 +51,15 @@ export function useCreateCustomTable<T>(Options: TableOptions<T>): Table<T> {
     },
     getPaginationInfo: () => {
       if (Options.pagination) {
-        const totalItems = Options.columnFilter
-          ? applyFilters(
-              Options.data,
-              Options.globalFilter,
-              Options.columnFilter,
-              Options.columns as ColumnDef<T>[]
-            ).length
-          : Options.data.length;
+        const totalItems =
+          Options.columnFilter || Options.globalFilter
+            ? applyFilters(
+                Options.data,
+                Options.globalFilter,
+                Options.columnFilter,
+                Options.columns as ColumnDef<T>[]
+              ).length
+            : Options.data.length;
         const totalPages = Math.ceil(totalItems / Options.pagination.pageSize);
 
         // Ensure currentPage is within the valid range

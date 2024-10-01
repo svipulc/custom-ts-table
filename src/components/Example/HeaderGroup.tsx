@@ -89,7 +89,7 @@ const HeaderGroup = () => {
           {rowModel.rows.map((row) => (
             <tr key={row.id} className="table-row">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{cell.getValue()}</td>
+                <td key={cell.id}>{cell.render()}</td>
               ))}
             </tr>
           ))}
