@@ -1,13 +1,15 @@
-import DataTable from "./components/DataTable/DataTable";
-import FilterTable from "./components/Example/FilterTable";
-import HeaderGroup from "./components/Example/HeaderGroup";
-import SimpleTable from "./components/Example/SimpleTable";
-import SortHeaderTable from "./components/Example/SortHeaderTable";
-import GlobalFilterTable from "./components/Example/GlobalFilterTable";
-import { createColumnHelper } from "./core/columns/columns";
+/** @delete this file app.tsx */
+
+import { DataTable } from "./components/DataTable";
+import FilterTable from "./example/FilterTable";
+import HeaderGroup from "./example/HeaderGroup";
+import SimpleTable from "./example/SimpleTable";
+import SortHeaderTable from "./example/SortHeaderTable";
+import GlobalFilterTable from "./example/GlobalFilterTable";
+import { createColumnHelper } from "./core/columns";
 import { employees } from "./data";
-import TestTable from "./components/Test Table/testTable";
-import DynamicTable from "./components/Test Table/DynamicTable";
+// import TestTable from "./example/testTable";
+import DynamicTable from "./example/DynamicTable";
 
 function App() {
   return (
@@ -52,10 +54,12 @@ function App() {
           columns={columns}
           globalFilter
           pagination
-          columnsFilter={{}}
+          columnsFilter={{
+            name: "",
+          }}
         />
 
-        {/* <h3>Testing table</h3>
+        {/* <h3>Testing table need to remove</h3>
         <TestTable /> */}
 
         <h3>Dynamic Table</h3>
