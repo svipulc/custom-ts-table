@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 import { resolve } from "path";
 import { peerDependencies } from "./package.json";
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,6 +15,7 @@ export default defineConfig({
       outDir: "dist/types",
       exclude: ["**/example/**/*", "**/data/**/*"],
     }),
+    cssInjectedByJsPlugin(),
   ],
   build: {
     lib: {
@@ -33,6 +35,7 @@ export default defineConfig({
       },
     },
     sourcemap: process.env.NODE_ENV !== "production",
+    cssCodeSplit: false,
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
