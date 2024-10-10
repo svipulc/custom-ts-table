@@ -14,7 +14,7 @@ export function TablePagination({
   setCurrentPage,
   currentPage,
   totalPages,
-  // totalItems,
+  totalItems,
   pageSize,
   setPageSize,
   // onPageChange,
@@ -24,71 +24,30 @@ export function TablePagination({
     if (currentPage) setCurrentPage(currentPage);
   }, [pageSize, currentPage, setCurrentPage]);
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-      {...props}
-    >
-      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+    <div className="table-pagination" {...props}>
+      <div>
         <button
           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="lato-bold"
-          style={{
-            backgroundColor: "lightblue",
-            padding: "10px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-            width: "100px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "black",
-          }}
+          className="table-pagination-button"
         >
-          Previous
+          &lsaquo;
         </button>
-        <span>
+        <span style={{ margin: "0 10px" }}>
           {currentPage} of {totalPages}
         </span>
         <button
-          className="lato-bold"
-          style={{
-            backgroundColor: "lightblue",
-            padding: "10px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-            width: "100px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "black",
-          }}
           onClick={() => {
             if (totalPages) setCurrentPage(prev => Math.min(prev + 1, totalPages));
           }}
           disabled={currentPage === totalPages}
+          className="table-pagination-button"
         >
-          Next
+          &rsaquo;
         </button>
       </div>
-      <div style={{ marginTop: "10px" }}>Total entries: {}</div>
-      <div
-        style={{
-          marginTop: "10px",
-          alignItems: "center",
-          display: "flex",
-          gap: "10px",
-        }}
-      >
+      <div>Total entries: {totalItems}</div>
+      <div>
         <label htmlFor="">Show</label>
         <select
           name="show"
@@ -96,19 +55,7 @@ export function TablePagination({
           onChange={e => {
             setPageSize(Number(e.target.value));
           }}
-          style={{
-            backgroundColor: "lightblue",
-            padding: "5px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-            width: "100px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "black",
-          }}
+          className="table-pagination-select"
         >
           <option value={4}>4</option>
           <option value={8}>8</option>

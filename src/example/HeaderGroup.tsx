@@ -1,6 +1,7 @@
 import { createColumnHelper } from "../core/columns";
 import { useTable } from "../hook/useTable";
 import { employees } from "../data";
+import React from "react";
 
 const columnHelper = createColumnHelper<employees>();
 
@@ -54,7 +55,7 @@ const columns = [
   }),
 ];
 
-const HeaderGroup = () => {
+export const HeaderGroup = () => {
   // create table
   const table = useTable({
     data: employees.slice(0, 5),
@@ -96,9 +97,9 @@ const HeaderGroup = () => {
               {footerGroup.headers.map(header => (
                 <>
                   {header.colSpan <= 1 && (
-                    <th key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
+                    <td key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
                       {header.footer}
-                    </th>
+                    </td>
                   )}
                 </>
               ))}
@@ -109,5 +110,3 @@ const HeaderGroup = () => {
     </div>
   );
 };
-
-export default HeaderGroup;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createColumnHelper } from "../core/columns";
 import { useTable } from "../hook/useTable";
 import { DeepKeys } from "../types";
@@ -25,24 +25,6 @@ export interface ResponseData {
   shippingInformation: string;
   availabilityStatus: string;
 }
-// const columnWithoutHelper = [
-//   {
-//     id: "1",
-//     accessorKey: "id",
-//     header: "ID",
-//     footer: () => "ID",
-//   },
-//   {
-//     id: "2",
-//     accessorKey: "title",
-//     header: "Title",
-//   },
-//   {
-//     id: "3",
-//     accessorKey: "stock",
-//     header: "Stock",
-//   },
-// ];
 
 const columnHelper = createColumnHelper<ResponseData>();
 const columns = [
@@ -117,7 +99,7 @@ const columns = [
   }),
 ];
 
-const DynamicTable = () => {
+export const DynamicTable = () => {
   const [ReData, setReData] = useState<ResponseData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -176,9 +158,13 @@ const DynamicTable = () => {
   const currentPage1 = table.getPaginationInfo()?.currentPage!;
 
   return (
-    <div>
-      <div>
-        <input type="text" onChange={e => setGlobalFilter(e.target.value)} />
+    <div className="table-container">
+      <div className="table-search-container">
+        <input
+          type="text"
+          onChange={e => setGlobalFilter(e.target.value)}
+          placeholder="Search..."
+        />
       </div>
       <table className="table">
         <thead className="table-header">
@@ -232,62 +218,27 @@ const DynamicTable = () => {
           ))}
         </tfoot>
       </table>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      <div className="table-pagination">
+        <div>
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
           >
             Previous
           </button>
-          <span>
+          <span style={{ margin: "0 10px" }}>
             {currentPage1} of {totalPages}
           </span>
           <button
             className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
             Next
           </button>
         </div>
-        <div style={{ marginTop: "10px" }}>
-          Total entries: {table.getPaginationInfo()?.totalItems}
-        </div>
+        <div>Total entries: {table.getPaginationInfo()?.totalItems}</div>
         <div>
           <button onClick={() => setPageSize(4)}>change pagesize 4</button>
         </div>
@@ -295,5 +246,3 @@ const DynamicTable = () => {
     </div>
   );
 };
-
-export default DynamicTable;

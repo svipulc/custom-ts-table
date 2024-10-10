@@ -3,7 +3,7 @@ import { createColumnHelper } from "../core/columns";
 import { employees } from "../data";
 import { DeepKeys } from "../types";
 import { useTable } from "../hook/useTable";
-
+import React from "react";
 // create column helper
 const columnHelper = createColumnHelper<employees>();
 
@@ -73,7 +73,7 @@ const columns = [
   }),
 ];
 
-const SortHeaderTable = () => {
+export const SortHeaderTable = () => {
   const [sortConfig, setSortConfig] = useState<{
     key: DeepKeys<employees>;
     direction: "ascending" | "descending" | "none";
@@ -164,9 +164,9 @@ const SortHeaderTable = () => {
               {headerGroup.headers.map(header => (
                 <>
                   {header.colSpan <= 1 && (
-                    <th key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
+                    <td key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
                       {header.footer}
-                    </th>
+                    </td>
                   )}
                 </>
               ))}
@@ -175,70 +175,28 @@ const SortHeaderTable = () => {
         </tfoot>
       </table>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      <div className="table-pagination">
+        <div>
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table-pagination-button"
           >
-            Previous
+            &lsaquo;
           </button>
-          <span>
+          <span style={{ margin: "0 10px" }}>
             {currentPage1} of {totalPages}
           </span>
           <button
-            className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table-pagination-button"
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next
+            &rsaquo;
           </button>
         </div>
-        <div style={{ marginTop: "10px" }}>
-          Total entries: {table.getPaginationInfo()?.totalItems}
-        </div>
-        <div
-          style={{
-            marginTop: "10px",
-            alignItems: "center",
-            display: "flex",
-            gap: "10px",
-          }}
-        >
+        <div>Total entries: {table.getPaginationInfo()?.totalItems}</div>
+        <div>
           <label htmlFor="">Show</label>
           <select
             name="show"
@@ -246,19 +204,7 @@ const SortHeaderTable = () => {
             onChange={e => {
               setPageSize(Number(e.target.value));
             }}
-            style={{
-              backgroundColor: "lightblue",
-              padding: "5px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table-pagination-select"
           >
             <option value="4">4</option>
             <option value="8">8</option>
@@ -269,5 +215,3 @@ const SortHeaderTable = () => {
     </div>
   );
 };
-
-export default SortHeaderTable;

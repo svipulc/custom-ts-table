@@ -50,7 +50,6 @@
     "node_modules" /* Exclude the 'node_modules' directory to prevent unnecessary type checking. */,
     "dist" /* Exclude the 'dist' directory where compiled files are output. */,
     "**/example/**/*",
-    "**/data/**/*",
-    "**/Test Table/**/*"
+    "**/data/**/*"
   ]
 }

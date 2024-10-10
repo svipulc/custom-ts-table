@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createColumnHelper } from "../core/columns";
 import { useTable } from "../hook/useTable";
 import { employees } from "../data";
@@ -12,6 +12,7 @@ const columns = [
   columnHelper.accessor("id", {
     id: "1",
     header: "ID",
+    footer: () => "ID",
   }),
   columnHelper.accessor("name", {
     id: "2",
@@ -46,7 +47,7 @@ const columns = [
   }),
 ];
 
-const FilterTable = () => {
+export const FilterTable = () => {
   const [sortConfig, setSortConfig] = useState<{
     key: DeepKeys<employees>;
     direction: "ascending" | "descending" | "none";
@@ -72,7 +73,9 @@ const FilterTable = () => {
     columns: columns,
     sorting: sortConfig,
     columnFilter: {
-      name: value => value.includes(filters.toLocaleLowerCase()),
+      name: value => {
+        return value.includes(filters.toLocaleLowerCase());
+      },
     },
     pagination: {
       page: currentPage,
@@ -94,7 +97,7 @@ const FilterTable = () => {
   }, [currentPage1]);
   return (
     <div className="table-container" style={{ marginBottom: "100px" }}>
-      <div>
+      <div className="table-search-container">
         <label htmlFor="" style={{ marginRight: "20px", fontSize: "20px" }}>
           Filter Name
         </label>
@@ -103,12 +106,6 @@ const FilterTable = () => {
           type="text"
           name="search"
           id="search"
-          style={{
-            padding: "10px",
-            borderRadius: "5px",
-            border: "1px solid lightblue",
-            fontSize: "16px",
-          }}
           onChange={e => setFilters(e.target.value)}
         />
       </div>
@@ -161,70 +158,28 @@ const FilterTable = () => {
           ))}
         </tfoot>
       </table>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      <div className="table-pagination">
+        <div>
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table-pagination-button"
           >
-            Previous
+            &lsaquo;
           </button>
-          <span>
+          <span style={{ margin: "0 10px" }}>
             {currentPage} of {totalPages}
           </span>
           <button
-            className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
+            className="table-pagination-button"
           >
-            Next
+            &rsaquo;
           </button>
         </div>
-        <div style={{ marginTop: "10px" }}>
-          Total entries: {table.getPaginationInfo()?.totalItems}
-        </div>
-        <div
-          style={{
-            marginTop: "10px",
-            alignItems: "center",
-            display: "flex",
-            gap: "10px",
-          }}
-        >
+        <div>Total entries: {table.getPaginationInfo()?.totalItems}</div>
+        <div>
           <label htmlFor="">Show</label>
           <select
             name="show"
@@ -232,19 +187,7 @@ const FilterTable = () => {
             onChange={e => {
               setPageSize(Number(e.target.value));
             }}
-            style={{
-              backgroundColor: "lightblue",
-              padding: "5px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table-pagination-select"
           >
             <option value="4">4</option>
             <option value="8">8</option>
@@ -255,5 +198,3 @@ const FilterTable = () => {
     </div>
   );
 };
-
-export default FilterTable;

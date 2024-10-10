@@ -1,14 +1,7 @@
 import { employees } from "../data";
 import { createColumnHelper } from "../core/columns";
 import { useTable } from "../hook/useTable";
-
-/**
- *
- * @Info
- * In this example we are creating a table of  1D array of object data
- *
- */
-
+import React from "react";
 // create column helper
 const columnHelper = createColumnHelper<employees>();
 
@@ -37,7 +30,7 @@ const columns = [
   }),
 ];
 
-const SimpleTable = () => {
+export const SimpleTable = () => {
   // create table
   const table = useTable({
     data: employees.slice(0, 5),
@@ -75,7 +68,7 @@ const SimpleTable = () => {
           {footerGroups.map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <th key={header.id}>{header.footer}</th>
+                <td key={header.id}>{header.footer}</td>
               ))}
             </tr>
           ))}
@@ -84,5 +77,3 @@ const SimpleTable = () => {
     </div>
   );
 };
-
-export default SimpleTable;

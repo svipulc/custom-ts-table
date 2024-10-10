@@ -59,7 +59,7 @@ const columns = [
   }),
 ];
 
-const GlobalFilterTable: React.FC = () => {
+export const GlobalFilterTable: React.FC = () => {
   const [sorting, setSorting] = useState<{
     key: DeepKeys<employees>;
     direction: "ascending" | "descending" | "none";
@@ -84,15 +84,15 @@ const GlobalFilterTable: React.FC = () => {
     columns: columns,
     sorting: sorting,
     globalFilter: globalFilter,
-    // columnFilter: {
-    //   department: (value) => {
-    //     return value === "it";
-    //   },
-    //   salary: (value) => {
-    //     return value > 70000;
-    //   },
-    // },
-    columnFilter: filters,
+    columnFilter: {
+      // department: value => {
+      //   return value === "it";
+      // },
+      // salary: value => {
+      //   return value > 70000;
+      // },
+    },
+    // columnFilter: filters,
     pagination: {
       page: currentPage,
       pageSize: pageSize,
@@ -109,57 +109,33 @@ const GlobalFilterTable: React.FC = () => {
   }, [currentPage1]);
 
   return (
-    <div className={""}>
-      <div style={{ display: "flex", gap: "10px" }}>
+    <div>
+      <div className="table-search-container">
         <input
           placeholder="Search all columns..."
           value={globalFilter}
           onChange={e => setGlobalFilter(e.target.value)}
           className="max-w-sm"
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "10px",
-            fontSize: "14px",
-          }}
         />
         <input
           placeholder="Search name columns..."
           value={filters.name}
           onChange={e => setFilters({ ...filters, name: e.target.value })}
           className="max-w-sm"
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "10px",
-            fontSize: "14px",
-          }}
         />
         <input
           placeholder="Search salary columns..."
           value={filters.salary}
           onChange={e => setFilters({ ...filters, salary: e.target.value })}
           className="max-w-sm"
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "10px",
-            fontSize: "14px",
-          }}
         />
         <input
           placeholder="Search city columns..."
           onChange={e => setFilters({ ...filters, "address.city": e.target.value })}
           className="max-w-sm"
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "10px",
-            fontSize: "14px",
-          }}
         />
       </div>
-      <div className="rounded-md border">
+      <div className="table-container">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             {headerGroups.map(headerGroup => (
@@ -207,70 +183,28 @@ const GlobalFilterTable: React.FC = () => {
           </tbody>
         </table>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      <div className="table-pagination">
+        <div>
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table---pagination-button"
           >
-            Previous
+            &lsaquo;
           </button>
-          <span>
+          <span style={{ margin: "0 10px" }}>
             {currentPage1} of {totalPages}
           </span>
           <button
-            className="lato-bold"
-            style={{
-              backgroundColor: "lightblue",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table---pagination-button"
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next
+            &rsaquo;
           </button>
         </div>
-        <div style={{ marginTop: "10px" }}>
-          Total entries: {table.getPaginationInfo()?.totalItems}
-        </div>
-        <div
-          style={{
-            marginTop: "10px",
-            alignItems: "center",
-            display: "flex",
-            gap: "10px",
-          }}
-        >
+        <div>Total entries: {table.getPaginationInfo()?.totalItems}</div>
+        <div>
           <label htmlFor="">Show</label>
           <select
             name="show"
@@ -278,19 +212,7 @@ const GlobalFilterTable: React.FC = () => {
             onChange={e => {
               setPageSize(Number(e.target.value));
             }}
-            style={{
-              backgroundColor: "lightblue",
-              padding: "5px",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-              width: "100px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "black",
-            }}
+            className="table-pagination-select"
           >
             <option value="4">4</option>
             <option value="8">8</option>
@@ -301,5 +223,3 @@ const GlobalFilterTable: React.FC = () => {
     </div>
   );
 };
-
-export default GlobalFilterTable;

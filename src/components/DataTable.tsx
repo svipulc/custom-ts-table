@@ -73,60 +73,50 @@ export function DataTable<T>({
   }, [pageIndex, updateGlobalFilter]);
 
   return (
-    <div className={`dataTable-container ${className}`} {...props}>
-      {globalFilter && (
-        <div>
-          <input
-            type="text"
-            value={updateGlobalFilter}
-            onChange={e => setUpdateGlobalFilter(e.target.value)}
-            placeholder="Search in all columns..."
-            style={{
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              marginBottom: "10px",
-            }}
-          />
-        </div>
-      )}
+    <div className={`table-container ${className}`} {...props}>
+      <div className="table-search-container">
+        {globalFilter && (
+          <div>
+            <input
+              type="text"
+              value={updateGlobalFilter}
+              onChange={e => setUpdateGlobalFilter(e.target.value)}
+              placeholder="Search in all columns..."
+            />
+          </div>
+        )}
 
-      {columnsFilter && (
-        <div style={{ gap: "10px", display: "flex" }}>
-          {Object.keys(columnsFilter).map(key => (
-            <div key={key} style={{ gap: "10px", display: "flex" }}>
-              {/* <label htmlFor={key}>{key}:</label> */}
-              <input
-                type="text"
-                id={key}
-                placeholder={`Filter by ${key}`}
-                // value={filters[key as keyof typeof filters]}
-                onChange={e =>
-                  setFilters({
-                    ...filters,
-                    [key]: e.target.value,
-                  })
-                }
-                style={{
-                  padding: "8px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  marginBottom: "10px",
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+        {columnsFilter && (
+          <div className="table-filter-container">
+            {Object.keys(columnsFilter).map(key => (
+              <div key={key}>
+                {/* <label htmlFor={key}>{key}:</label> */}
+                <input
+                  type="text"
+                  id={key}
+                  placeholder={`Filter by ${key}`}
+                  // value={filters[key as keyof typeof filters]}
+                  onChange={e =>
+                    setFilters({
+                      ...filters,
+                      [key]: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-      <table className="dataTable">
+      <table className="table">
         <TableHeader
           headerGroups={headerGroups}
           sortConfig={sortConfig}
           sorting={sorting}
           requestSort={requestSort}
         />
-        <tbody className="dataTable-body">
+        <tbody className="table-body">
           {rowModel.rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
@@ -135,7 +125,7 @@ export function DataTable<T>({
             </tr>
           ))}
         </tbody>
-        <tfoot className="dataTable-footer">
+        <tfoot className="table-footer">
           {footerGroups.map(footerGroup => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map(footer => (

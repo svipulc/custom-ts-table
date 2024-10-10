@@ -1,76 +1,8 @@
 /** @delete this file app.tsx */
 
 import { DataTable } from "./components/DataTable";
-import FilterTable from "./example/FilterTable";
-import HeaderGroup from "./example/HeaderGroup";
-import SimpleTable from "./example/SimpleTable";
-import SortHeaderTable from "./example/SortHeaderTable";
-import GlobalFilterTable from "./example/GlobalFilterTable";
 import { createColumnHelper } from "./core/columns";
 import { employees } from "./data";
-// import TestTable from "./example/testTable";
-import DynamicTable from "./example/DynamicTable";
-
-function App() {
-  return (
-    <div
-      className="container"
-      style={{
-        height: "100%",
-        margin: "0 20px 0 20px",
-      }}
-    >
-      <h1>Custom Table Component</h1>
-
-      <section>
-        <h3>Simple Table</h3>
-        <div>
-          <SimpleTable />
-        </div>
-
-        <h3>Header Group</h3>
-        <div>
-          <HeaderGroup />
-        </div>
-
-        <h3>Sort Header Group</h3>
-        <div>
-          <SortHeaderTable />
-        </div>
-
-        <h3>Filter Table</h3>
-        <div>
-          <FilterTable />
-        </div>
-
-        <h3>Global filter</h3>
-        <div>
-          <GlobalFilterTable />
-        </div>
-
-        <h3>Custom Table Component</h3>
-        <DataTable
-          data={employees}
-          columns={columns}
-          globalFilter
-          pagination
-          columnsFilter={{
-            name: "",
-          }}
-        />
-
-        {/* <h3>Testing table need to remove</h3>
-        <TestTable /> */}
-
-        <h3>Dynamic Table</h3>
-        <DynamicTable />
-      </section>
-    </div>
-  );
-}
-
-export default App;
-
 const columnHelper = createColumnHelper<employees>();
 
 // create columns
@@ -82,7 +14,7 @@ const columns = [
   }),
   columnHelper.accessor("name", {
     id: "2",
-    header: () => <a href="">Name</a>,
+    header: "Name",
     footer: () => "Name",
     sortable: true,
   }),
@@ -124,3 +56,37 @@ const columns = [
     ],
   }),
 ];
+
+function App() {
+  return (
+    <div
+      className="container"
+      style={{
+        height: "100%",
+        margin: "0 20px 0 20px",
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <h1>Custom Table Component</h1>
+
+      <section>
+        <DataTable
+          data={employees}
+          columns={columns}
+          globalFilter
+          pagination
+          columnsFilter={{
+            salary: "",
+            position: "",
+          }}
+          sorting
+        />
+      </section>
+    </div>
+  );
+}
+
+export default App;

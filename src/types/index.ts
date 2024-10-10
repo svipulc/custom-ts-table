@@ -127,7 +127,8 @@ export type FilterCriteria<T> = {
 };
 
 // filter function type
-export type FilterFunction = (value: unknown) => boolean;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FilterFunction = (value: any) => boolean;
 
 /** @Table_types */
 
