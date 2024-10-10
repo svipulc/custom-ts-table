@@ -1,5 +1,5 @@
 {
-  "name": "custom-ts-table",
+  "name": "@svipulc/custom-ts-table",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/cjs/index.js",
