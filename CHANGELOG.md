@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/svipulc/custom-ts-table/compare/v1.0.2...v1.0.3) (2024-10-11)
+
+### Bug Fixes
+
+- add license,keyword and github link ([f35f806](https://github.com/svipulc/custom-ts-table/commit/f35f806c80bd4d655a028ede5f2d1acd30f9f11f))
+
 ## [1.0.2](https://github.com/svipulc/custom-ts-table/compare/v1.0.1...v1.0.2) (2024-10-11)
 
 ### Bug Fixes
