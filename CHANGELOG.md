@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/svipulc/custom-ts-table/compare/v1.0.1...v1.0.2) (2024-10-11)
+
+### Bug Fixes
+
+- add license in package json ([9898e88](https://github.com/svipulc/custom-ts-table/commit/9898e88ea279e874dd568793c273889edbbaa692))
+
 ## [1.0.1](https://github.com/svipulc/custom-ts-table/compare/v1.0.0...v1.0.1) (2024-10-10)
 
 ### Bug Fixes
