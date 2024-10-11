@@ -65,9 +65,19 @@
       "npm run format"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/svipulc/custom-ts-table.git"
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "keywords": [
+    "React",
+    "Typescript",
+    "Table",
+    "Custom Table"
+  ]
 }
